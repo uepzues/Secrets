@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+
+<div class="flex justify-center items-center mt-[20vh]">
+  <div class="card w-96 bg-[#394e6a] text-primary-content">
+    <div class="card-body">
+      <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <div class="card-body bg-[#cccdb2] rounded-lg ">
+
+          <form action="/register" method="POST">
+            <div>
+              <label class="label" for="email">
+                <span class="label-text">Email</span>
+              </label>
+              <input type="email" name="username" placeholder="usename" class="input input-bordered text-gray-950" />
+            </div>
+            <div>
+              <label class="label" for="password">
+                <span class="label-text">Password</span>
+              </label>
+              <input type="password" name="password" placeholder="password" class="input input-bordered text-gray-950" />
+            </div>
+            <div class="mt-6">
+              <button class="btn btn-[#394e6a]" type="submit">Register</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<%- include('partials/footer') %>
