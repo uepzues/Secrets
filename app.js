@@ -5,11 +5,6 @@ import session from "express-session";
 import passport from "passport";
 import passportLocalMongoose from "passport-local-mongoose";
 
-// import md5 from "md5";
-// import bcrypt from "bcrypt";
-// import encrypt from "mongoose-encryption";
-
-// const saltRounds = 10;
 dotenv.config();
 
 const app = express();
@@ -25,7 +20,6 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    // cookie: { secure: true },
   })
 );
 
