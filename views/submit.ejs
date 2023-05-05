@@ -6,13 +6,13 @@
   <div class="hero-content text-center">
     <div class="max-w-md">
       <i class="fa-solid fa-key fa-8x"></i>
-      <h1 class="text-3xl font-extrabold my-6">Secrets</h1>
-      <p class="secret-text text-2xl font-sans  my-8 mb-14">Don't keep your secrets, share them anonymously!</p>
+      <h1 class="text-3xl font-extrabold my-4">Secrets</h1>
+      <p class="secret-text text-2xl font-sans  mt-6 mb-6">Don't keep your secrets, share them anonymously!</p>
 
       <form action="/submit" method="POST">
-        <div>
-          <input class="input input-bordered mb-3" type="text" name="secret" placeholder="What's your secret?">
-          <button class="btn btn-primary w-36 ml-3">Submit</button>
+        <div class="flex flex-col">
+          <input class="input input-bordered mb-3 placeholder:text-center" type="text" name="secret" placeholder="What's your secret?">
+          <button class="btn btn-primary min-w-full" type="submit">Submit</button>
         </div>
       </form>
     </div>
