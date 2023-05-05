@@ -4,15 +4,15 @@ import mongoose from "mongoose";
 import session from "express-session";
 import passport from "passport";
 import passportLocalMongoose from "passport-local-mongoose";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import findOrCreate from "mongoose-findorcreate";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-
 app.set("view engine", "ejs");
 
 app.use(
@@ -36,38 +36,109 @@ const connectDB = async () => {
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
+  googleId: String,
+  secret: String,
+  username: { type: String, sparse: true },
 });
 
-// userSchema.plugin(encrypt, {
-//   secret: process.env.SECRET,
-//   encryptedFields: ["password"],
-// });
-
 userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
 
-const User = new mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.serializeUser((user, done) => {
+  console.log("serialized user");
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.CLIENT_REDIRECT,
+      userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      User.findOrCreate({ googleId: profile.id })
+        .then((foundUsers) => {
+          if (foundUsers) {
+            // console.dir(foundUsers);
+            return foundUsers;
+          } else {
+            const newUser = new User({
+              googleId: profile.id,
+            });
+            console.log("created user");
+            return newUser.save();
+          }
+        })
+        .then((user) => {
+          return cb(null, user);
+        })
+        .catch((err) => {
+          return cb(err);
+        });
+    }
+  )
+);
+
+//get
 
 app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/secrets", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.render("secrets");
-  } else {
-    res.redirect("/login");
+app.get(
+  "/auth/google/",
+  passport.authenticate("google", { scope: ["profile"] })
+);
+
+app.get(
+  "/auth/google/secrets",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    res.redirect("/secrets");
   }
+);
+
+app.get("/secrets", (req, res) => {
+  User.find({ secret: { $ne: null } })
+    .then((foundUsers) => res.render("secrets", { usersSecrets: foundUsers }))
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.get("/register", (req, res) => {
   res.render("register");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+app.get("/submit", (req, res) => {
+  res.render("submit");
+});
+
+app.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/");
+    }
+  });
+});
+
+//posts
 app.post("/register", (req, res) => {
   User.register(
     { username: req.body.username },
@@ -85,10 +156,6 @@ app.post("/register", (req, res) => {
   );
 });
 
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
 app.post("/login", (req, res) => {
   const user = new User({
     username: req.body.username,
@@ -102,20 +169,6 @@ app.post("/login", (req, res) => {
       passport.authenticate("local")(req, res, () => {
         res.redirect("/secrets");
       });
-    }
-  });
-});
-
-app.get("/submit", (req, res) => {
-  res.render("submit");
-});
-
-app.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect("/");
     }
   });
 });

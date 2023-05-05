@@ -8,20 +8,28 @@
         <div class="card-body bg-[#cdc0b2] rounded-lg ">
 
           <form action="/login" method="POST">
-            <div class="form-control">
+            <div class="">
               <label class="label" for="email">
                 <span class="label-text">Email</span>
               </label>
               <input type="email" name="username" placeholder="usename" class="input input-bordered text-gray-950" />
             </div>
-            <div class="form-control">
+            <div class="">
               <label class="label" for="password">
                 <span class="label-text">Password</span>
               </label>
               <input type="password" name="password" placeholder="password" class="input input-bordered text-gray-950" />
             </div>
-            <div class="form-control mt-6">
-              <button class="btn btn-[#394e6a]" type="submit">Login</button>
+            <div class="flex flex-row justify-evenly w-[247px]">
+              <div class="mt-6">
+                <button class="btn btn-[#394e6a]" type="submit">Login</button>
+              </div>
+              <div class="mt-6">
+                <a href="/auth/google" role="button">
+                  <button class="btn btn-[#394e6a]" type="button">
+                    <img src="/img/google.svg" class="w-6 h-6" alt="google icon"> Sign-in
+                  </button></a>
+              </div>
             </div>
           </form>
 
