@@ -20,16 +20,18 @@
               </label>
               <input type="password" name="password" placeholder="password" class="input input-bordered text-gray-950" />
             </div>
-            <div class="flex flex-row justify-evenly w-[247px]">
-              <div class="mt-6">
-                <button class="btn btn-[#394e6a]" type="submit">Login</button>
-              </div>
-              <div class="mt-6">
-                <a href="/auth/google" role="button">
-                  <button class="btn btn-[#394e6a]" type="button">
-                    <img src="/img/google.svg" class="w-6 h-6" alt="google icon"> Sign-in
-                  </button></a>
-              </div>
+            <div class="grid gap-y-2">
+              <button class="btn btn-[#394e6a] mt-6" type="submit">Login</button>
+              <a class=" grid" href="/auth/google/" role="button">
+                <button class="btn btn-[#394e6a]" type="button">
+                  <img src="/img/google.svg" class="w-6 h-6" alt="google icon"> Google
+                </button>
+              </a>
+              <a class=" grid" href="/auth/facebook/" role="button">
+                <button class="btn btn-[#394e6a]" type="button">
+                  <img src="/img/facebook.svg" class="w-5 h-5 mr-1" alt="facebook icon"> Facebook
+                </button>
+              </a>
             </div>
           </form>
 
